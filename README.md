@@ -25,10 +25,33 @@ console.log(newRecord1 === newRecord2) //true
 Why?
 ----
 
-In large React applications, being able to compare props via reference equality is a massive performance win. However, it can be difficult to compare reference equality of immutable objects, as each change results in a new object.
+**Memcords let you use records as React props, *without* breaking `PureComponent`.**
 
-**Memcords make it easier to pass records as React props, by child components to easily update them while maintaining reference equality.**
+In large React applications, it is important for performance that your props can be compared by reference equality. Without reference equality, `PureComponent` can't provide any performance wins -- making performance optimization a much harder problem.
 
+Primitive props (i.e. strings and numbers) will always work as expected, making them easy to use. However, objects present a problem; if you want to update an immutable object in each `render` cycle, they'll never be reference-equal -- even if their values are equivalent!
+
+```js
+const model = { value: 'kangaroo' }
+
+const newModel1 = { value: 'koala' }
+const newModel2 = { value: 'koala' }
+
+console.log(newModel1 === newModel2) // false!
+```
+
+Memcords detect repeated changes and return identical values, simplifying the use of records as props.
+
+```js
+// Create new record with the given values
+const model = new Model({ value: 'koala' })
+
+// Repeatedly setting the same value will return reference-equal objects.
+const newRecord1 = model.set('value', 'kangaroo')
+const newRecord2 = model.set('value', 'kangaroo')
+
+console.log(newRecord1 === newRecord2) //true
+```
 
 Usage
 -----
