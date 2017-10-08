@@ -68,6 +68,7 @@ const Model = createMemcord([
   'value'
   'error'
 ])
+```
 
 
 ### `constructor(values)`
