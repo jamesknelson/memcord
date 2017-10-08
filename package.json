@@ -1,0 +1,30 @@
+{
+  "name": "memcord",
+  "version": "0.1.0",
+  "description": "Memorized Record",
+  "author": "James K Nelson <james@jamesknelson.com>",
+  "license": "MIT",
+  "main": "commonjs/index.js",
+  "module": "src/index.mjs",
+  "scripts": {
+    "clean": "rimraf commonjs",
+    "build:watch": "cross-env BABEL_ENV=commonjs babel -x .mjs --watch --source-maps=inline -d commonjs/ src/",
+    "build": "cross-env BABEL_ENV=commonjs babel -x .mjs src --out-dir commonjs",
+    "test": "mocha -r @std/esm test/*.test.mjs",
+    "test:watch": "mocha --watch -r @std/esm test/*.test.mjs",
+    "prepublish": "npm run clean && npm run test && npm run build"
+  },
+  "keywords": [
+    "record",
+    "memcord"
+  ],
+  "devDependencies": {
+    "@std/esm": "^0.11.3",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.24.0",
+    "babel-preset-env": "^1.6.0",
+    "cross-env": "^5.0.5",
+    "mocha": "^4.0.1",
+    "rimraf": "^2.6.2"
+  }
+}
