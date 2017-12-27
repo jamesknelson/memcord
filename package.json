@@ -1,11 +1,10 @@
 {
   "name": "memcord",
-  "version": "0.1.1",
-  "description": "Memorized Record",
+  "version": "0.1.2",
+  "description": "Memoized Record",
   "author": "James K Nelson <james@jamesknelson.com>",
   "license": "MIT",
   "main": "commonjs/index.js",
-  "module": "src/index.mjs",
   "scripts": {
     "clean": "rimraf commonjs",
     "build:watch": "cross-env BABEL_ENV=commonjs babel -x .mjs --watch --source-maps=inline -d commonjs/ src/",
