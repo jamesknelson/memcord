@@ -1,29 +1,30 @@
 {
   "name": "memcord",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Memoized Record",
   "author": "James K Nelson <james@jamesknelson.com>",
   "license": "MIT",
-  "main": "commonjs/index.js",
+  "main": "dist/commonjs/index.js",
+  "module": "dist/es/index.js",
+  "types": "src/index.ts",
   "scripts": {
-    "clean": "rimraf commonjs",
-    "build:watch": "cross-env BABEL_ENV=commonjs babel -x .mjs --watch --source-maps=inline -d commonjs/ src/",
-    "build": "cross-env BABEL_ENV=commonjs babel -x .mjs src --out-dir commonjs",
-    "test": "mocha -r @std/esm test/*.test.mjs",
-    "test:watch": "mocha --watch -r @std/esm test/*.test.mjs",
-    "prepublish": "npm run clean && npm run test && npm run build"
+    "clean": "rimraf dist",
+    "build:commonjs": "tsc --pretty --module commonjs --outDir dist/commonjs",
+    "build:es": "tsc --pretty --module es2015 --outDir dist/es",
+    "build": "npm run build:es && npm run build:commonjs",
+    "build:watch": "npm run clean && npm run build:es -- --watch",
+    "prepublish": "npm run clean && npm run build && npm run test",
+    "test": "mocha test/*.test.js",
+    "test:watch": "mocha test/*.test.js"
   },
   "keywords": [
     "record",
     "memcord"
   ],
   "devDependencies": {
-    "@std/esm": "^0.11.3",
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.24.0",
-    "babel-preset-env": "^1.6.0",
     "cross-env": "^5.0.5",
     "mocha": "^4.0.1",
-    "rimraf": "^2.6.2"
+    "rimraf": "^2.6.2",
+    "typescript": "^2.6.2"
   }
 }
