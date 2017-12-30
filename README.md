@@ -8,17 +8,23 @@ Record objects that return reference-equal values when you repeat previous updat
 Install with `npm install memcord --save`.
 
 ```js
-// Create a type of Record
-const Model = createMemcord([ 'value', 'error' ])
+import { createMemcord } from 'memcord'
 
-// Create new record with the given values
-const model = new Model({ value: 'koala' })
+// Create a new record with the given values
+const model = createMemcord({ value: 'koala' })
+
+// Access values like a normal record
+console.log(model.value) // koala
 
 // Repeatedly setting the same value will return reference-equal objects.
 const newRecord1 = model.set('value', 'kangaroo')
 const newRecord2 = model.set('value', 'kangaroo')
 
-console.log(newRecord1 === newRecord2) //true
+console.log(model.value) // koala
+console.log(newRecord1.value) // kangaroo
+console.log(newRecord2.value) // kangaroo
+
+console.log(newRecord1 === newRecord2) // true
 ```
 
 
@@ -44,7 +50,7 @@ Memcords detect repeated changes and return identical values, simplifying the us
 
 ```js
 // Create new record with the given values
-const model = new Model({ value: 'koala' })
+const model = createMemcord({ value: 'koala' })
 
 // Repeatedly setting the same value will return reference-equal objects.
 const newRecord1 = model.set('value', 'kangaroo')
@@ -57,34 +63,26 @@ Usage
 -----
 
 
-### `createMemcord(availableKeys)`
+### `createMemcord(values, equals?)`
 
-Define a record type by passing available keys to `createMemcord`
+Create a memoized record.
+
+You can also customize how the memcord checks for equality by passing in a comparison function as the second argument. By default, it will use reference equality.
 
 ```js
 import { createMemcord } from 'memcord'
 
-const Model = createMemcord([
-  'value'
-  'error'
-])
-```
-
-
-### `constructor(values)`
-
-Create a record by calling `new`. Repeat it and get the same record.
-
-```js
-const data = new Model({ value: 'kangaroo' })
+const data = createMemcord({ value: 'kangaroo' })
 
 console.log(data.value)         // 'kangaroo'
 console.log(data.error)         // undefined
 
 
-const nextData = new Model({ value: 'kangaroo' })
+const nextData = createMemcord({ value: 'kangaroo' })
 
-console.log(nextData === data)  // true
+// Two memcords created with separate calls to `createMemcord`
+// will never be equal, even if they share the same properties.
+console.log(nextData === data)  // false
 ```
 
 
@@ -111,28 +109,12 @@ console.log(newData2 === newData1) // true
 You update multiple value at a time with `merge`.
 
 ```js
-const merged1 = data.set({ value: 'giant koala', error: 'extinct' })
+const merged1 = data.merge({ value: 'giant koala', error: 'extinct' })
 
 console.log(merged1.value)        // 'giant koala'
 console.log(merged1.error)        // 'extinct'
 
-const merged2 = data.set({ value: 'giant koala', error: 'extinct' })
+const merged2 = data.merge({ value: 'giant koala', error: 'extinct' })
 
 console.log(merged1 === merged2)  // true
-```
-
-
-### Unknown keys
-
-When `NODE_ENV` is not set to `production`, Memcord throws an exception if you try and set a key that wasn't passed to `createMemcord`.
-
-```js
-// Error
-const fail = new Model({ unknown_key: 'Computer says no' })
-
-// Error
-data.set('unknown_key', 'Computer says no')
-
-// Error
-data.set({ value: 'ok', unknown_key: 'Computer says no' })
 ```

@@ -1,7 +1,3 @@
-function referenceEquals(a: any, b: any): boolean {
-    return a === b
-}
-
 /**
  * Create a Record that remembers values that you set for each property.
  * If you set the same value again, it will return the previous object.
@@ -20,12 +16,13 @@ export function createMemcord<T extends object = any>(valuesOrMemcord: any, equa
     )
 }
 
-const memo = new WeakMap<MemcordBase, MemcordMemo<any>>()
+export type Memcord<T extends object = any> =
+    Readonly<T> & {
+        set: MemcordBase<T>['set']
+        merge: MemcordBase<T>['merge']
+    }
 
-type Memcord<T extends object = any> = Readonly<T> & {
-    set: MemcordBase<T>['set']
-    merge: MemcordBase<T>['merge']
-}
+const memo = new WeakMap<MemcordBase, MemcordMemo<any>>()
 
 type MemcordMemo<T extends object> = { [K in keyof T]?: { value: T[K], memcord: MemcordBase<T> } }
 
@@ -87,4 +84,8 @@ class MemcordBase<T extends object = any> {
         }
         return result
     }
+}
+
+function referenceEquals(a: any, b: any): boolean {
+    return a === b
 }

@@ -1,6 +1,6 @@
 {
   "name": "memcord",
-  "version": "0.2.0",
+  "version": "1.0.0-0",
   "description": "Memoized Record",
   "author": "James K Nelson <james@jamesknelson.com>",
   "license": "MIT",
